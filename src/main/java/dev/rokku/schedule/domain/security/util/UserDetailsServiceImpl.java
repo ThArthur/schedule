@@ -39,7 +39,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     }
 
     private UserDetailsImpl validarLogin(Users usuario) {
-
-        throw throwUsuarioNaoEncontrado().get();
+        return UserDetailsImpl.buildUserDetailsImpl(usuario);
     }
 }

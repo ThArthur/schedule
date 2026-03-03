@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
+import java.time.Instant;
 import java.util.Date;
 
 @Component
@@ -51,6 +52,10 @@ public class JwtUtil extends DefaultJwtSecret {
         } catch (Exception e) {
             throw new ApiException(HttpStatus.BAD_REQUEST, "Token inválido.");
         }
+    }
+
+    public Instant getExpiresAt() {
+        return Instant.now().plusMillis(jwtExpirationMs);
     }
 
 }
