@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="
+          http://www.liquibase.org/xml/ns/dbchangelog
+          https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.9.xsd">
+
+    <changeSet id="001-create-building" author="dev">
+        <createTable tableName="building">
+            <column name="id" type="BIGSERIAL">
+                <constraints primaryKey="true" nullable="false" primaryKeyName="pk_building"/>
+            </column>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="number" type="VARCHAR(50)"/>
+            <column name="complement" type="VARCHAR(255)"/>
+            <column name="created_at" type="TIMESTAMPTZ" defaultValueComputed="now()">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_at" type="TIMESTAMPTZ" defaultValueComputed="now()">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="002-create-room" author="dev">
+        <createTable tableName="room">
+            <column name="id" type="BIGSERIAL">
+                <constraints primaryKey="true" nullable="false" primaryKeyName="pk_room"/>
+            </column>
+            <column name="floor" type="VARCHAR(50)"/>
+            <column name="number" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="building_id" type="BIGINT">
+                <constraints nullable="false" foreignKeyName="fk_room_building"
+                             referencedTableName="building" referencedColumnNames="id"/>
+            </column>
+            <column name="created_at" type="TIMESTAMPTZ" defaultValueComputed="now()">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_at" type="TIMESTAMPTZ" defaultValueComputed="now()">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createIndex tableName="room" indexName="idx_room_building_id">
+            <column name="building_id"/>
+        </createIndex>
+
+        <addUniqueConstraint tableName="room"
+                             columnNames="building_id, number"
+                             constraintName="uk_room_building_number"/>
+    </changeSet>
+
+    <changeSet id="003-create-app-user" author="dev">
+        <createTable tableName="users">
+            <column name="id" type="BIGSERIAL">
+                <constraints primaryKey="true" nullable="false" primaryKeyName="pk_users"/>
+            </column>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="email" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="password_hash" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="role" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_at" type="TIMESTAMPTZ" defaultValueComputed="now()">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_at" type="TIMESTAMPTZ" defaultValueComputed="now()">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addUniqueConstraint tableName="users" columnNames="email" constraintName="uk_users_email"/>
+    </changeSet>
+
+    <changeSet id="004-create-room-price" author="dev">
+        <createTable tableName="room_price">
+            <column name="id" type="BIGSERIAL">
+                <constraints primaryKey="true" nullable="false" primaryKeyName="pk_room_price"/>
+            </column>
+            <column name="room_id" type="BIGINT">
+                <constraints nullable="false" foreignKeyName="fk_room_price_room"
+                             referencedTableName="room" referencedColumnNames="id"/>
+            </column>
+            <column name="value" type="NUMERIC(12,2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="period_hours" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="active" type="BOOLEAN" defaultValueBoolean="true">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_at" type="TIMESTAMPTZ" defaultValueComputed="now()">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createIndex tableName="room_price" indexName="idx_room_price_room_id">
+            <column name="room_id"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet id="005-create-reservation" author="dev">
+        <createTable tableName="reservation">
+            <column name="id" type="BIGSERIAL">
+                <constraints primaryKey="true" nullable="false" primaryKeyName="pk_reservation"/>
+            </column>
+            <column name="room_id" type="BIGINT">
+                <constraints nullable="false" foreignKeyName="fk_reservation_room"
+                             referencedTableName="room" referencedColumnNames="id"/>
+            </column>
+            <column name="user_id" type="BIGINT">
+                <constraints nullable="false" foreignKeyName="fk_reservation_user"
+                             referencedTableName="users" referencedColumnNames="id"/>
+            </column>
+            <column name="start_at" type="TIMESTAMPTZ">
+                <constraints nullable="false"/>
+            </column>
+            <column name="end_at" type="TIMESTAMPTZ">
+                <constraints nullable="false"/>
+            </column>
+            <column name="total_price" type="NUMERIC(12,2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="status" type="VARCHAR(30)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_at" type="TIMESTAMPTZ" defaultValueComputed="now()">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_at" type="TIMESTAMPTZ" defaultValueComputed="now()">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createIndex tableName="reservation" indexName="idx_reservation_room_id">
+            <column name="room_id"/>
+        </createIndex>
+        <createIndex tableName="reservation" indexName="idx_reservation_user_id">
+            <column name="user_id"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet id="006-create-room-block" author="dev">
+        <createTable tableName="room_block">
+            <column name="id" type="BIGSERIAL">
+                <constraints primaryKey="true" nullable="false" primaryKeyName="pk_room_block"/>
+            </column>
+            <column name="room_id" type="BIGINT">
+                <constraints nullable="false" foreignKeyName="fk_room_block_room"
+                             referencedTableName="room" referencedColumnNames="id"/>
+            </column>
+            <column name="start_at" type="TIMESTAMPTZ">
+                <constraints nullable="false"/>
+            </column>
+            <column name="end_at" type="TIMESTAMPTZ">
+                <constraints nullable="false"/>
+            </column>
+            <column name="reason" type="VARCHAR(255)"/>
+            <column name="notes" type="VARCHAR(255)"/>
+            <column name="created_at" type="TIMESTAMPTZ" defaultValueComputed="now()">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createIndex tableName="room_block" indexName="idx_room_block_room_id">
+            <column name="room_id"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet id="007-add-checks" author="dev">
+        <sql>
+            ALTER TABLE reservation
+                ADD CONSTRAINT ck_reservation_time CHECK (end_at &gt; start_at);
+        </sql>
+        <sql>
+            ALTER TABLE room_block
+                ADD CONSTRAINT ck_room_block_time CHECK (end_at &gt; start_at);
+        </sql>
+        <sql>
+            ALTER TABLE room_price
+                ADD CONSTRAINT ck_room_price_period CHECK (period_hours &gt; 0);
+        </sql>
+        <sql>
+            ALTER TABLE reservation
+                ADD CONSTRAINT ck_reservation_status CHECK (status IN ('PENDING','CONFIRMED','CANCELLED'));
+        </sql>
+        <sql>
+            ALTER TABLE users
+                ADD CONSTRAINT ck_users_role CHECK (role IN ('ADMIN','USER'));
+        </sql>
+    </changeSet>
+
+</databaseChangeLog>

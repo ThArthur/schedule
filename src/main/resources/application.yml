@@ -1,0 +1,81 @@
+app:
+  security:
+    cookies:
+      secure: false
+      same-site: Strict
+
+  confirmacao-email:
+    expMin: ${CONFIRM_EMAIL_EXP_MIN:2880}
+    intervalo-reenvio-min: ${CONFIRM_EMAIL_INTERVALO_MIN:30}
+
+spring:
+  application:
+    name: schedule
+
+  datasource:
+    url: jdbc:postgresql://localhost:8091/schedule
+    username: schedule
+    password: schedule
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: none
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: true
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    open-in-view: false
+
+  liquibase:
+    clear-checksums: true
+    change-log: classpath:db/changelog/db.changelog-master-public.xml
+    default-schema: public
+    contexts: local
+
+  servlet:
+    multipart:
+      max-file-size: 200MB
+      max-request-size: 200MB
+
+  batch:
+    job:
+      enabled: false
+
+  mail:
+    host: ${MAIL_HOST:smtp.gmail.com}
+    port: ${MAIL_PORT:587}
+    username: ${MAIL_USERNAME:portalcomnect@gmail.com}
+    password: ${MAIL_PASSWORD:lkfl ysvl ruzo ndzf}
+    protocol: ${MAIL_PROTOCOL:smtp}
+    properties:
+      mail:
+        smtp:
+          auth: ${MAIL_AUTH:true}
+          starttls:
+            enable: ${MAIL_STARTTLS:true}
+    default-encoding: ${MAIL_ENCODING:UTF-8}
+
+  envio-email:
+    from: ${MAIL_FROM:portalcomnect@gmail.com}
+
+server:
+  port: 8090
+
+jwt:
+  secret: ${JWT_SCRET_KEY:CHAVE-JWT-COM-MAIS-DE-256-BIT-123456789}
+  expirationMs: 14400000
+  createPasswordJwt: 172800000
+
+hikari-custom:
+  minimum-idle: ${HIKARI_MINIMUM_IDLE:10}
+  maximum-pool-size: ${HIKARI_MAXIMUM_POOL_SIZE:80}
+  idle-timeout: ${HIKARI_MINIMUM_IDLE_MS:600000}
+
+front-url: ${FRONT_URL:http://localhost:3000}
+
+boleto:
+  api:
+    base-url: http://dev.balancer.abeweb.com.br:8095/bolecode
+    auth-token: Basic MzhlMzEwYzctODY0Zi00NzQ0LTllZjAtOGYxYzhhOWVjZWUzOmE5ZTgxNzEyLTcxZDEtNDdkZC04ZmI5LTY5OTc0OTFkYjE5Ng==

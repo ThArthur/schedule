@@ -1,0 +1,27 @@
+services:
+  db:
+    container_name: schedule-db
+    image: postgres:17.4
+    shm_size: 128mb
+    ports:
+      - 8091:5432
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ./init-postgres:/docker-entrypoint-initdb.d
+    environment:
+      PGDATA: /var/lib/postgresql/data/pgdata
+      POSTGRES_USER: schedule
+      POSTGRES_PASSWORD: schedule
+      POSTGRES_DB: schedule
+      CONFIRM_EMAIL_EXP_MIN: "2880"
+      CONFIRM_EMAIL_INTERVALO_MIN: "30"
+
+  mailhog:
+    container_name: schedule-mailhog
+    image: mailhog/mailhog
+    ports:
+      - "1025:1025"
+      - "8025:8025"
+
+volumes:
+  postgres-data:
