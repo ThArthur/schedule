@@ -9,7 +9,10 @@ import dev.rokku.schedule.domain.dto.auth.response.UserResponse;
 import dev.rokku.schedule.domain.service.AuthService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,6 +25,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor
+@Slf4j
 public class AuthController {
 
     private final AuthService authService;
@@ -37,30 +41,4 @@ public class AuthController {
         return authService.login(request);
     }
 
-    @PostMapping("/users")
-    @ResponseStatus(HttpStatus.CREATED)
-    public UserResponse createUser(@Valid @RequestBody CreateUserRequest request) {
-        return authService.createUser(request);
-    }
-
-    @GetMapping("/users")
-    public List<UserResponse> listUsers() {
-        return authService.listUsers();
-    }
-
-    @GetMapping("/users/{id}")
-    public UserResponse getUserById(@PathVariable Long id) {
-        return authService.getUserById(id);
-    }
-
-    @PutMapping("/users/{id}")
-    public UserResponse updateUser(@PathVariable Long id, @Valid @RequestBody UpdateUserRequest request) {
-        return authService.updateUser(id, request);
-    }
-
-    @DeleteMapping("/users/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteUser(@PathVariable Long id) {
-        authService.deleteUser(id);
-    }
 }

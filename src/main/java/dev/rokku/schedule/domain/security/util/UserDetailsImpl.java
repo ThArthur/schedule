@@ -23,7 +23,7 @@ public class UserDetailsImpl implements UserDetails {
     private final Collection<? extends GrantedAuthority> authorities;
 
     private static List<GrantedAuthority> getAuthorities(Users usuario) {
-        return List.of(new SimpleGrantedAuthority(usuario.getRole().name()));
+        return List.of(new SimpleGrantedAuthority("ROLE_" + usuario.getRole().name()));
     }
 
     public static UserDetailsImpl buildUserDetailsImpl(Users usuario) {
