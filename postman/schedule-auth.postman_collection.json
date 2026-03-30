@@ -1,9 +1,9 @@
 ﻿{
   "info": {
     "_postman_id": "a6aa2f8d-bc2e-487b-bf97-cf5a4b0d2f64",
-    "name": "Schedule API - Auth",
+    "name": "Schedule API",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-    "description": "Collection para teste de registro, login e CRUD de usuarios com JWT."
+    "description": "Collection para teste da API de Agendamento, incluindo Auth, Usuarios e CRUDs."
   },
   "item": [
     {
@@ -104,7 +104,7 @@
       ]
     },
     {
-      "name": "Auth Users (Protected)",
+      "name": "Admin Users",
       "item": [
         {
           "name": "Create User",
@@ -125,13 +125,13 @@
               "raw": "{\n  \"name\": \"Admin API\",\n  \"email\": \"admin.api@example.com\",\n  \"password\": \"123456\",\n  \"role\": \"ADMIN\"\n}"
             },
             "url": {
-              "raw": "{{baseUrl}}/api/auth/users",
+              "raw": "{{baseUrl}}/api/user-admin/users",
               "host": [
                 "{{baseUrl}}"
               ],
               "path": [
                 "api",
-                "auth",
+                "user-admin",
                 "users"
               ]
             }
@@ -149,13 +149,13 @@
               }
             ],
             "url": {
-              "raw": "{{baseUrl}}/api/auth/users",
+              "raw": "{{baseUrl}}/api/user-admin/users",
               "host": [
                 "{{baseUrl}}"
               ],
               "path": [
                 "api",
-                "auth",
+                "user-admin",
                 "users"
               ]
             }
@@ -173,13 +173,13 @@
               }
             ],
             "url": {
-              "raw": "{{baseUrl}}/api/auth/users/{{userId}}",
+              "raw": "{{baseUrl}}/api/user-admin/users/{{userId}}",
               "host": [
                 "{{baseUrl}}"
               ],
               "path": [
                 "api",
-                "auth",
+                "user-admin",
                 "users",
                 "{{userId}}"
               ]
@@ -206,13 +206,13 @@
               "raw": "{\n  \"name\": \"Admin API Atualizado\",\n  \"email\": \"admin.api@example.com\",\n  \"password\": \"654321\",\n  \"role\": \"ADMIN\"\n}"
             },
             "url": {
-              "raw": "{{baseUrl}}/api/auth/users/{{userId}}",
+              "raw": "{{baseUrl}}/api/user-admin/users/{{userId}}",
               "host": [
                 "{{baseUrl}}"
               ],
               "path": [
                 "api",
-                "auth",
+                "user-admin",
                 "users",
                 "{{userId}}"
               ]
@@ -231,13 +231,13 @@
               }
             ],
             "url": {
-              "raw": "{{baseUrl}}/api/auth/users/{{userId}}",
+              "raw": "{{baseUrl}}/api/user-admin/users/{{userId}}",
               "host": [
                 "{{baseUrl}}"
               ],
               "path": [
                 "api",
-                "auth",
+                "user-admin",
                 "users",
                 "{{userId}}"
               ]
@@ -248,10 +248,10 @@
       ]
     },
     {
-      "name": "Protected",
+      "name": "Buildings",
       "item": [
         {
-          "name": "GET Buildings (Bearer Token)",
+          "name": "List All",
           "request": {
             "method": "GET",
             "header": [
@@ -268,6 +268,673 @@
               "path": [
                 "api",
                 "buildings"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get By Id",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/buildings/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "buildings",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Building A\",\n  \"number\": \"123\",\n  \"complement\": \"Main Campus\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/buildings",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "buildings"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Building A - Updated\",\n  \"number\": \"123-B\",\n  \"complement\": \"Main Campus\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/buildings/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "buildings",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/buildings/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "buildings",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Rooms",
+      "item": [
+        {
+          "name": "List All",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/rooms",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "rooms"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get By Id",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/rooms/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "rooms",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"floor\": \"1st Floor\",\n  \"number\": \"101\",\n  \"buildingId\": 1\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/rooms",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "rooms"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"floor\": \"1st Floor\",\n  \"number\": \"101-A\",\n  \"buildingId\": 1\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/rooms/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "rooms",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/rooms/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "rooms",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Room Blocks",
+      "item": [
+        {
+          "name": "List All",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/room-blocks",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "room-blocks"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get By Id",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/room-blocks/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "room-blocks",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"roomId\": 1,\n  \"startAt\": \"2026-03-24T10:00:00Z\",\n  \"endAt\": \"2026-03-24T12:00:00Z\",\n  \"reason\": \"Maintenance\",\n  \"notes\": \"AC repair\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/room-blocks",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "room-blocks"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"roomId\": 1,\n  \"startAt\": \"2026-03-24T10:00:00Z\",\n  \"endAt\": \"2026-03-24T14:00:00Z\",\n  \"reason\": \"Maintenance Extended\",\n  \"notes\": \"AC repair taking longer\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/room-blocks/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "room-blocks",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/room-blocks/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "room-blocks",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Room Prices",
+      "item": [
+        {
+          "name": "List All",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/room-prices",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "room-prices"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get By Id",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/room-prices/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "room-prices",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"roomId\": 1,\n  \"value\": 50.00,\n  \"periodHours\": 1,\n  \"active\": true\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/room-prices",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "room-prices"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"roomId\": 1,\n  \"value\": 55.00,\n  \"periodHours\": 1,\n  \"active\": true\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/room-prices/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "room-prices",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/room-prices/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "room-prices",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Reservations",
+      "item": [
+        {
+          "name": "List All",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/reservations",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "reservations"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get By Id",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/reservations/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "reservations",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"roomId\": 1,\n  \"userId\": 1,\n  \"startAt\": \"2026-03-25T08:00:00Z\",\n  \"endAt\": \"2026-03-25T10:00:00Z\",\n  \"totalPrice\": 100.00,\n  \"status\": \"CONFIRMED\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/reservations",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "reservations"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"roomId\": 1,\n  \"userId\": 1,\n  \"startAt\": \"2026-03-25T08:00:00Z\",\n  \"endAt\": \"2026-03-25T10:00:00Z\",\n  \"totalPrice\": 100.00,\n  \"status\": \"CANCELLED\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/reservations/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "reservations",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/reservations/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "reservations",
+                "1"
               ]
             }
           },
