@@ -14,9 +14,6 @@ import javax.crypto.SecretKey;
 
 public abstract class DefaultJwtSecret {
 
-    @Value("${front-url}")
-    protected String frontUrl;
-
     @Value("${jwt.secret}")
     private String jwtSecret;
     

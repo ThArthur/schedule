@@ -203,7 +203,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"name\": \"Admin API Atualizado\",\n  \"email\": \"admin.api@example.com\",\n  \"password\": \"654321\",\n  \"role\": \"ADMIN\"\n}"
+              "raw": "{\n  \"name\": \"Admin API Atualizado\"\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/api/user-admin/users/{{userId}}",

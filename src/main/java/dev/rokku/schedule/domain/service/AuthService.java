@@ -85,17 +85,7 @@ public class AuthService {
     public UserResponse updateUser(Long id, UpdateUserRequest request) {
         Users user = buscaUsuarioPorId(id);
 
-        if (!user.getEmail().equalsIgnoreCase(request.email()) && usersRepository.existsByEmail(request.email())) {
-            throw new ApiException(HttpStatus.CONFLICT, "E-mail ja cadastrado.");
-        }
-
         user.setName(request.name());
-        user.setEmail(request.email());
-        user.setRole(request.role());
-
-        if (request.password() != null && !request.password().isBlank()) {
-            user.setPasswordHash(passwordEncoder.encode(request.password()));
-        }
 
         usersRepository.save(user);
 
