@@ -305,15 +305,23 @@
               {
                 "key": "Authorization",
                 "value": "Bearer {{token}}"
-              },
-              {
-                "key": "Content-Type",
-                "value": "application/json"
               }
             ],
             "body": {
-              "mode": "raw",
-              "raw": "{\n  \"name\": \"Building A\",\n  \"number\": \"123\",\n  \"complement\": \"Main Campus\"\n}"
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "building",
+                  "value": "{\n  \"name\": \"Building A\",\n  \"number\": \"123\",\n  \"complement\": \"Main Campus\"\n}",
+                  "type": "text",
+                  "contentType": "application/json"
+                },
+                {
+                  "key": "image",
+                  "type": "file",
+                  "src": []
+                }
+              ]
             },
             "url": {
               "raw": "{{baseUrl}}/api/buildings",
@@ -336,15 +344,23 @@
               {
                 "key": "Authorization",
                 "value": "Bearer {{token}}"
-              },
-              {
-                "key": "Content-Type",
-                "value": "application/json"
               }
             ],
             "body": {
-              "mode": "raw",
-              "raw": "{\n  \"name\": \"Building A - Updated\",\n  \"number\": \"123-B\",\n  \"complement\": \"Main Campus\"\n}"
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "building",
+                  "value": "{\n  \"name\": \"Building A - Updated\",\n  \"number\": \"123-B\",\n  \"complement\": \"Main Campus\"\n}",
+                  "type": "text",
+                  "contentType": "application/json"
+                },
+                {
+                  "key": "image",
+                  "type": "file",
+                  "src": []
+                }
+              ]
             },
             "url": {
               "raw": "{{baseUrl}}/api/buildings/1",
@@ -379,6 +395,26 @@
                 "api",
                 "buildings",
                 "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Image",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/buildings/1/image",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "buildings",
+                "1",
+                "image"
               ]
             }
           },
@@ -444,15 +480,23 @@
               {
                 "key": "Authorization",
                 "value": "Bearer {{token}}"
-              },
-              {
-                "key": "Content-Type",
-                "value": "application/json"
               }
             ],
             "body": {
-              "mode": "raw",
-              "raw": "{\n  \"floor\": \"1st Floor\",\n  \"number\": \"101\",\n  \"buildingId\": 1\n}"
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "room",
+                  "value": "{\n  \"floor\": \"1st Floor\",\n  \"number\": \"101\",\n  \"buildingId\": 1\n}",
+                  "type": "text",
+                  "contentType": "application/json"
+                },
+                {
+                  "key": "image",
+                  "type": "file",
+                  "src": []
+                }
+              ]
             },
             "url": {
               "raw": "{{baseUrl}}/api/rooms",
@@ -475,15 +519,23 @@
               {
                 "key": "Authorization",
                 "value": "Bearer {{token}}"
-              },
-              {
-                "key": "Content-Type",
-                "value": "application/json"
               }
             ],
             "body": {
-              "mode": "raw",
-              "raw": "{\n  \"floor\": \"1st Floor\",\n  \"number\": \"101-A\",\n  \"buildingId\": 1\n}"
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "room",
+                  "value": "{\n  \"floor\": \"1st Floor\",\n  \"number\": \"101-A\",\n  \"buildingId\": 1\n}",
+                  "type": "text",
+                  "contentType": "application/json"
+                },
+                {
+                  "key": "image",
+                  "type": "file",
+                  "src": []
+                }
+              ]
             },
             "url": {
               "raw": "{{baseUrl}}/api/rooms/1",
@@ -518,6 +570,26 @@
                 "api",
                 "rooms",
                 "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Image",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/rooms/1/image",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "rooms",
+                "1",
+                "image"
               ]
             }
           },

@@ -6,8 +6,11 @@ import dev.rokku.schedule.domain.service.BuildingService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -28,17 +31,24 @@ public class BuildingController {
         return buildingService.findById(id);
     }
 
-    @PostMapping
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("hasRole('ADMIN')")
-    public BuildingResponse create(@RequestBody @Valid BuildingRequest request) {
-        return buildingService.create(request);
+    public BuildingResponse create(
+            @RequestPart("building") @Valid BuildingRequest request,
+            @RequestPart(value = "image", required = false) MultipartFile image
+    ) {
+        return buildingService.create(request, image);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @PreAuthorize("hasRole('ADMIN')")
-    public BuildingResponse update(@PathVariable Long id, @RequestBody @Valid BuildingRequest request) {
-        return buildingService.update(id, request);
+    public BuildingResponse update(
+            @PathVariable Long id,
+            @RequestPart("building") @Valid BuildingRequest request,
+            @RequestPart(value = "image", required = false) MultipartFile image
+    ) {
+        return buildingService.update(id, request, image);
     }
 
     @DeleteMapping("/{id}")
@@ -46,5 +56,10 @@ public class BuildingController {
     @PreAuthorize("hasRole('ADMIN')")
     public void delete(@PathVariable Long id) {
         buildingService.delete(id);
+    }
+
+    @GetMapping(value = "/{id}/image", produces = MediaType.IMAGE_JPEG_VALUE)
+    public ResponseEntity<byte[]> getImage(@PathVariable Long id) {
+        return ResponseEntity.ok(buildingService.getImage(id));
     }
 }

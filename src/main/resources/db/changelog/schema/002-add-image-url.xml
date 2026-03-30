@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <databaseChangeLog
         xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -7,7 +6,13 @@
           http://www.liquibase.org/xml/ns/dbchangelog
           https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.9.xsd">
 
-    <include file="db/changelog/schema/001-initial-schema.xml" relativeToChangelogFile="false"/>
-    <include file="db/changelog/schema/002-add-image-url.xml" relativeToChangelogFile="false"/>
+    <changeSet id="007-add-image-url-to-building-and-room" author="dev">
+        <addColumn tableName="building">
+            <column name="image_url" type="VARCHAR(512)"/>
+        </addColumn>
+        <addColumn tableName="room">
+            <column name="image_url" type="VARCHAR(512)"/>
+        </addColumn>
+    </changeSet>
 
 </databaseChangeLog>

@@ -7,6 +7,7 @@ public record RoomResponse(
     String floor,
     String number,
     Long buildingId,
+    String imageUrl,
     OffsetDateTime createdAt,
     OffsetDateTime updatedAt
 ) {}

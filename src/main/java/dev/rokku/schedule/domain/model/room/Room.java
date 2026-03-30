@@ -26,4 +26,8 @@ public class Room extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "building_id", nullable = false)
     private Building building;
+
+    @Lob
+    @Column(name = "image_url")
+    private byte[] image;
 }

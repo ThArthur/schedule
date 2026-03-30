@@ -7,6 +7,7 @@ public record BuildingResponse(
     String name,
     String number,
     String complement,
+    String imageUrl,
     OffsetDateTime createdAt,
     OffsetDateTime updatedAt
 ) {}
