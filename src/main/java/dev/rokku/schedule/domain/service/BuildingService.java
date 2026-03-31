@@ -7,12 +7,12 @@ import dev.rokku.schedule.domain.model.building.Building;
 import dev.rokku.schedule.domain.repository.BuildingRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -21,6 +21,10 @@ import java.util.stream.Collectors;
 @Slf4j
 public class BuildingService {
     private final BuildingRepository buildingRepository;
+    private final FileStorageService fileStorageService;
+
+    @Value("${app.base-url}")
+    private String baseUrl;
 
     @Transactional(readOnly = true)
     public List<BuildingResponse> findAll() {
@@ -41,12 +45,8 @@ public class BuildingService {
         Building building = new Building();
         updateEntity(building, request);
         if (image != null && !image.isEmpty()) {
-            try {
-                building.setImage(image.getBytes());
-            } catch (IOException e) {
-                log.error("Error reading image bytes", e);
-                throw new ApiException(HttpStatus.INTERNAL_SERVER_ERROR, "Error processing image");
-            }
+            String path = fileStorageService.storeFile(image, "buildings");
+            building.setImageUrl(path);
         }
         return toResponse(buildingRepository.save(building));
     }
@@ -57,22 +57,24 @@ public class BuildingService {
                 .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "Building not found"));
         updateEntity(building, request);
         if (image != null && !image.isEmpty()) {
-            try {
-                building.setImage(image.getBytes());
-            } catch (IOException e) {
-                log.error("Error reading image bytes", e);
-                throw new ApiException(HttpStatus.INTERNAL_SERVER_ERROR, "Error processing image");
+            if (building.getImageUrl() != null) {
+                fileStorageService.deleteFile(building.getImageUrl());
             }
+            String path = fileStorageService.storeFile(image, "buildings");
+            building.setImageUrl(path);
         }
         return toResponse(buildingRepository.save(building));
     }
 
     @Transactional
     public void delete(Long id) {
-        if (!buildingRepository.existsById(id)) {
-            throw new ApiException(HttpStatus.NOT_FOUND, "Building not found");
+        Building building = buildingRepository.findById(id)
+                .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "Building not found"));
+        
+        if (building.getImageUrl() != null) {
+            fileStorageService.deleteFile(building.getImageUrl());
         }
-        buildingRepository.deleteById(id);
+        buildingRepository.delete(building);
     }
 
     private void updateEntity(Building building, BuildingRequest request) {
@@ -82,7 +84,14 @@ public class BuildingService {
     }
 
     private BuildingResponse toResponse(Building building) {
-        String imageUrl = building.getImage() != null ? "/api/buildings/" + building.getId() + "/image" : null;
+        String base = baseUrl;
+        if (base.endsWith("/")) {
+            base = base.substring(0, base.length() - 1);
+        }
+        String imageUrl = (building.getImageUrl() != null && !building.getImageUrl().isEmpty())
+                ? base + "/uploads/" + building.getImageUrl()
+                : null;
+
         return new BuildingResponse(
                 building.getId(),
                 building.getName(),
@@ -94,13 +103,4 @@ public class BuildingService {
         );
     }
 
-    @Transactional(readOnly = true)
-    public byte[] getImage(Long id) {
-        Building building = buildingRepository.findById(id)
-                .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "Building not found"));
-        if (building.getImage() == null) {
-            throw new ApiException(HttpStatus.NOT_FOUND, "Image not found for this building");
-        }
-        return building.getImage();
-    }
 }

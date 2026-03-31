@@ -27,7 +27,6 @@ public class Room extends BaseEntity {
     @JoinColumn(name = "building_id", nullable = false)
     private Building building;
 
-    @Lob
     @Column(name = "image_url")
-    private byte[] image;
+    private String imageUrl;
 }

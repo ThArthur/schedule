@@ -9,12 +9,12 @@ import dev.rokku.schedule.domain.repository.BuildingRepository;
 import dev.rokku.schedule.domain.repository.RoomRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -24,6 +24,10 @@ import java.util.stream.Collectors;
 public class RoomService {
     private final RoomRepository roomRepository;
     private final BuildingRepository buildingRepository;
+    private final FileStorageService fileStorageService;
+
+    @Value("${app.base-url}")
+    private String baseUrl;
 
     @Transactional(readOnly = true)
     public List<RoomResponse> findAll() {
@@ -44,12 +48,8 @@ public class RoomService {
         Room room = new Room();
         updateEntity(room, request);
         if (image != null && !image.isEmpty()) {
-            try {
-                room.setImage(image.getBytes());
-            } catch (IOException e) {
-                log.error("Error reading image bytes", e);
-                throw new ApiException(HttpStatus.INTERNAL_SERVER_ERROR, "Error processing image");
-            }
+            String path = fileStorageService.storeFile(image, "rooms");
+            room.setImageUrl(path);
         }
         return toResponse(roomRepository.save(room));
     }
@@ -60,22 +60,24 @@ public class RoomService {
                 .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "Room not found"));
         updateEntity(room, request);
         if (image != null && !image.isEmpty()) {
-            try {
-                room.setImage(image.getBytes());
-            } catch (IOException e) {
-                log.error("Error reading image bytes", e);
-                throw new ApiException(HttpStatus.INTERNAL_SERVER_ERROR, "Error processing image");
+            if (room.getImageUrl() != null) {
+                fileStorageService.deleteFile(room.getImageUrl());
             }
+            String path = fileStorageService.storeFile(image, "rooms");
+            room.setImageUrl(path);
         }
         return toResponse(roomRepository.save(room));
     }
 
     @Transactional
     public void delete(Long id) {
-        if (!roomRepository.existsById(id)) {
-            throw new ApiException(HttpStatus.NOT_FOUND, "Room not found");
+        Room room = roomRepository.findById(id)
+                .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "Room not found"));
+        
+        if (room.getImageUrl() != null) {
+            fileStorageService.deleteFile(room.getImageUrl());
         }
-        roomRepository.deleteById(id);
+        roomRepository.delete(room);
     }
 
     private void updateEntity(Room room, RoomRequest request) {
@@ -88,7 +90,11 @@ public class RoomService {
     }
 
     private RoomResponse toResponse(Room room) {
-        String imageUrl = room.getImage() != null ? "/api/rooms/" + room.getId() + "/image" : null;
+        String base = baseUrl;
+        if (base.endsWith("/")) {
+            base = base.substring(0, base.length() - 1);
+        }
+        String imageUrl = room.getImageUrl() != null ? base + "/uploads/" + room.getImageUrl() : null;
         return new RoomResponse(
                 room.getId(),
                 room.getFloor(),
@@ -98,15 +104,5 @@ public class RoomService {
                 room.getCreatedAt(),
                 room.getUpdatedAt()
         );
-    }
-
-    @Transactional(readOnly = true)
-    public byte[] getImage(Long id) {
-        Room room = roomRepository.findById(id)
-                .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "Room not found"));
-        if (room.getImage() == null) {
-            throw new ApiException(HttpStatus.NOT_FOUND, "Image not found for this room");
-        }
-        return room.getImage();
     }
 }

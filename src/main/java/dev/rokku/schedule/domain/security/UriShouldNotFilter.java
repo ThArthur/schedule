@@ -8,7 +8,8 @@ public class UriShouldNotFilter {
             "/api/auth/login",
             "/api/auth/register",
             "/api/buildings/*/image",
-            "/api/rooms/*/image"
+            "/api/rooms/*/image",
+            "/uploads/**"
     );
 
 }

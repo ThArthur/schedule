@@ -24,7 +24,6 @@ public class Building extends BaseEntity {
 
     private String complement;
 
-    @Lob
     @Column(name = "image_url")
-    private byte[] image;
+    private String imageUrl;
 }
