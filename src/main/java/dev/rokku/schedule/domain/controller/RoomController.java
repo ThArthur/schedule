@@ -30,6 +30,11 @@ public class RoomController {
         return roomService.findById(id);
     }
 
+    @GetMapping("/building/{buildingId}")
+    public List<RoomResponse> findByBuildingId(@PathVariable Long buildingId) {
+        return roomService.findByBuildingId(buildingId);
+    }
+
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("hasRole('ADMIN')")

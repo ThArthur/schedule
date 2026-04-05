@@ -1,5 +1,5 @@
 app:
-  base-url: ${APP_BASE_URL:}
+  base-url: ${APP_BASE_URL:http://192.168.15.7:8090/}
 
 spring:
   application:

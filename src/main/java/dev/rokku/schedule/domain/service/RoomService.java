@@ -43,6 +43,13 @@ public class RoomService {
                 .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "Room not found"));
     }
 
+    @Transactional(readOnly = true)
+    public List<RoomResponse> findByBuildingId(Long buildingId) {
+        return roomRepository.findByBuildingId(buildingId).stream()
+                .map(this::toResponse)
+                .collect(Collectors.toList());
+    }
+
     @Transactional
     public RoomResponse create(RoomRequest request, MultipartFile image) {
         Room room = new Room();
